@@ -1,0 +1,40 @@
+
+services:
+  db:
+    image: mysql:8.0
+    container_name: compound_mysql
+    networks:
+      - compounds
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: compound_db
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_db_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      timeout: 10s
+      retries: 3
+
+  # backend:
+  #   build: .
+  #   ports:
+  #     - "5000:5000"
+  #   volumes:
+  #     - .:/app
+  #   depends_on:
+  #     db:
+  #       condition: service_healthy
+  adminer:
+    image: adminer
+    networks:
+      - compounds
+    ports:
+      - "8080:8080"
+
+volumes:
+  mysql_db_data:
+networks:
+  compounds:
+    external: true
