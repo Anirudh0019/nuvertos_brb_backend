@@ -1,60 +1,52 @@
 
 services:
-
-  # backend:
-  #   build: 
-  #     context: .
-  #     dockerfile: Dockerfile 
-  #   container_name: compound_backend
-  #   networks:
-  #     - compounds
-  #   ports:
-  #     - 5000:5000
-  #   depends_on:
-  #     db:
-  #       condition: service_healthy
-  #   environment:
-  #     - JWT_SECRET=jwtsecret
-  #     - DB_PASSWORD=password
-  #     - DB_HOST=db
-  #     - DB_NAME=compound_db
-  #     - DB_USER=root
-  #     - DB_PORT=3306
+  backend:
+    build: 
+      context: .
+      dockerfile: Dockerfile 
+    container_name: compound_backend
+    networks:
+      - test-new
+    ports:
+      - 5000:5000
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      - JWT_SECRET=jwtsecret
+      - DB_PASSWORD=password
+      - DB_HOST=db
+      - DB_NAME=compound_db
+      - DB_USER=root
+      - DB_PORT=3306
   db:
     image: mysql:8.0
     container_name: compound_mysql
     networks:
-      - compounds
+      - test-new
     environment:
       MYSQL_ROOT_PASSWORD: password
       MYSQL_DATABASE: compound_db
     ports:
       - "3306:3306"
     volumes:
-      - mysql_db_data:/var/lib/mysql
+      - test-new:/var/lib/mysql
+      - ./sql-init:/docker-entrypoint-initdb.d  
     healthcheck:
       test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
       timeout: 10s
       retries: 3
-
-  # backend:
-  #   build: .
-  #   ports:
-  #     - "5000:5000"
-  #   volumes:
-  #     - .:/app
-  #   depends_on:
-  #     db:
-  #       condition: service_healthy
   adminer:
     image: adminer
     networks:
-      - compounds
+      - test-new
     ports:
       - "8080:8080"
 
 volumes:
-  mysql_db_data:
+  test-new:
+    name: test-new
+    external: true
 networks:
-  compounds:
+  test-new:
     external: true
