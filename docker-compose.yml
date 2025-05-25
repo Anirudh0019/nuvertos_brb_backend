@@ -1,25 +1,25 @@
 
 services:
 
-  backend:
-    build: 
-      context: .
-      dockerfile: Dockerfile 
-    container_name: compound_backend
-    networks:
-      - compounds
-    ports:
-      - 5000:5000
-    depends_on:
-      db:
-        condition: service_healthy
-    environment:
-      - JWT_SECRET=jwtsecret
-      - DB_PASSWORD=password
-      - DB_HOST=db
-      - DB_NAME=compound_db
-      - DB_USER=root
-      - DB_PORT=3306
+  # backend:
+  #   build: 
+  #     context: .
+  #     dockerfile: Dockerfile 
+  #   container_name: compound_backend
+  #   networks:
+  #     - compounds
+  #   ports:
+  #     - 5000:5000
+  #   depends_on:
+  #     db:
+  #       condition: service_healthy
+  #   environment:
+  #     - JWT_SECRET=jwtsecret
+  #     - DB_PASSWORD=password
+  #     - DB_HOST=db
+  #     - DB_NAME=compound_db
+  #     - DB_USER=root
+  #     - DB_PORT=3306
   db:
     image: mysql:8.0
     container_name: compound_mysql
